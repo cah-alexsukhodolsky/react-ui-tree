@@ -7,10 +7,11 @@ module.exports = {
   },
   module: {
     loaders: [
-      {test: /\.js$/, loader: 'babel-loader'},
+      {test: /\.js$/, loader: 'babel-loader', query: {presets: ['es2015', 'react'], plugins: ["transform-decorators-legacy"]}},
       {test: /\.css$/, loader: "style-loader!css-loader"},
       {test: /\.less$/, loader: "style-loader!css-loader!less-loader"}
-    ]
+    ],
+
   },
   externals: {
     'react': 'React',

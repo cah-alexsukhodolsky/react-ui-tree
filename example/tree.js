@@ -1,5 +1,6 @@
 module.exports = {
   module: 'react-ui-tree',
+  draggable: false,
   children: [{
     module: 'dist',
     collapsed: true,
