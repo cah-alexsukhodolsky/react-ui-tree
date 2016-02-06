@@ -2,8 +2,6 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _dec, _desc, _value, _class;
-
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -24,38 +22,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-function _applyDecoratedDescriptor(target, property, decorators, descriptor, context) {
-  var desc = {};
-  Object['ke' + 'ys'](descriptor).forEach(function (key) {
-    desc[key] = descriptor[key];
-  });
-  desc.enumerable = !!desc.enumerable;
-  desc.configurable = !!desc.configurable;
-
-  if ('value' in desc || desc.initializer) {
-    desc.writable = true;
-  }
-
-  desc = decorators.slice().reverse().reduce(function (desc, decorator) {
-    return decorator(target, property, desc) || desc;
-  }, desc);
-
-  if (context && desc.initializer !== void 0) {
-    desc.value = desc.initializer ? desc.initializer.call(context) : void 0;
-    desc.initializer = undefined;
-  }
-
-  if (desc.initializer === void 0) {
-    Object['define' + 'Property'](target, property, desc);
-    desc = null;
-  }
-
-  return desc;
-}
-
 var Tree = require('./tree');
 
-var FullTree = (_dec = (0, _reactKeydown2.default)('enter', 'up', 'down', 'left', 'right'), (_class = function (_React$Component) {
+var FullTree = function (_React$Component) {
   _inherits(FullTree, _React$Component);
 
   function FullTree(props) {
@@ -148,12 +117,6 @@ var FullTree = (_dec = (0, _reactKeydown2.default)('enter', 'up', 'down', 'left'
           dragging: dragging && dragging.id
         })
       );
-    }
-  }, {
-    key: 'toggleHello',
-    value: function toggleHello(e) {
-      e.preventDefault();
-      console.log('key pressed, son!');
     }
   }, {
     key: 'dragStart',
@@ -307,7 +270,7 @@ var FullTree = (_dec = (0, _reactKeydown2.default)('enter', 'up', 'down', 'left'
   }]);
 
   return FullTree;
-}(_react2.default.Component), (_applyDecoratedDescriptor(_class.prototype, 'toggleHello', [_dec], Object.getOwnPropertyDescriptor(_class.prototype, 'toggleHello'), _class.prototype)), _class));
+}(_react2.default.Component);
 
 FullTree.propTypes = {
   tree: _react2.default.PropTypes.object.isRequired,

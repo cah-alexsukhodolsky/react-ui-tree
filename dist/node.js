@@ -123,7 +123,6 @@ var Node = function (_React$Component) {
       var nodeId = this.props.index.id;
       var dom = this.refs.inner;
 
-      console.log(this.props.index);
       if (this.props.index.node.draggable !== false && this.props.onDragStart) {
         this.props.onDragStart(nodeId, dom, e);
       }
