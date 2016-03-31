@@ -224,6 +224,8 @@ var FullTree = function (_React$Component) {
         dragging.id = newIndex.id;
       }
 
+      if (!this._newIndex) this._newIndex = newIndex ? true : false;
+
       this.setState({
         tree: tree,
         dragging: dragging
@@ -249,8 +251,11 @@ var FullTree = function (_React$Component) {
   }, {
     key: 'change',
     value: function change(tree) {
+      if (this.props.onChange && this._newIndex) {
+        this.props.onChange(tree.obj);
+      }
+      this._newIndex = false;
       this._updated = true;
-      if (this.props.onChange) this.props.onChange(tree.obj);
     }
   }, {
     key: 'toggleCollapse',
