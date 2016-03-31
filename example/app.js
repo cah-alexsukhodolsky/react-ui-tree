@@ -2,7 +2,7 @@ var cx = require('classnames');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Tree = require('../lib/react-ui-tree.js');
-var tree = require('./tree');
+var tree = require('./tree.js');
 
 require('../lib/react-ui-tree.less');
 require('./theme.less');
