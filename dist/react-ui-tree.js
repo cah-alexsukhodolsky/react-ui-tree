@@ -36,7 +36,8 @@ var FullTree = function (_React$Component) {
 
     _this.toggleCollapse = _this.toggleCollapse.bind(_this);
     _this.dragStart = _this.dragStart.bind(_this);
-
+    _this.drag = _this.drag.bind(_this);
+    _this.drag = debounce(_this.drag, 10);
     _this.drag = _this.drag.bind(_this);
     _this.dragEnd = _this.dragEnd.bind(_this);
 
@@ -136,14 +137,12 @@ var FullTree = function (_React$Component) {
       this._start = true;
 
       window.addEventListener('mousemove', this.drag);
-      window.addEventListener('mouseup', debounce(this.dragEnd), 50);
+      window.addEventListener('mouseup', this.dragEnd);
     }
-
-    // debounce this!!
-
   }, {
     key: 'drag',
     value: function drag(e) {
+
       if (this._start) {
         this.setState({
           dragging: this.dragging
@@ -153,9 +152,11 @@ var FullTree = function (_React$Component) {
 
       var tree = this.state.tree;
       var dragging = this.state.dragging;
+
       var paddingLeft = this.props.paddingLeft;
       var newIndex = null;
       var index = tree.getIndex(dragging.id);
+
       var collapsed = index.node.collapsed;
 
       var _startX = this._startX;
