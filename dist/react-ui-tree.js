@@ -36,9 +36,11 @@ var FullTree = function (_React$Component) {
 
     _this.toggleCollapse = _this.toggleCollapse.bind(_this);
     _this.dragStart = _this.dragStart.bind(_this);
+
     _this.drag = _this.drag.bind(_this);
-    _this.drag = debounce(_this.drag, 10);
+    _this.drag = debounce(_this.drag, 4);
     _this.drag = _this.drag.bind(_this);
+
     _this.dragEnd = _this.dragEnd.bind(_this);
 
     return _this;
