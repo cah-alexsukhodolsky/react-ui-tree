@@ -38,7 +38,7 @@ var FullTree = function (_React$Component) {
     _this.dragStart = _this.dragStart.bind(_this);
 
     _this.drag = _this.drag.bind(_this);
-    _this.drag = debounce(_this.drag, 4);
+    _this.drag = debounce(_this.drag, 15);
     _this.drag = _this.drag.bind(_this);
 
     _this.dragEnd = _this.dragEnd.bind(_this);
@@ -170,6 +170,7 @@ var FullTree = function (_React$Component) {
         x: _startX + e.clientX - _offsetX,
         y: _startY + e.clientY - _offsetY
       };
+
       dragging.x = pos.x;
       dragging.y = pos.y;
 
@@ -197,28 +198,46 @@ var FullTree = function (_React$Component) {
         dragging.id = newIndex.id;
       }
 
+      // TODO get node at position.
+      // console.log(e);
+
       if (diffY < 0) {
         // up
-        var above = tree.getNodeByTop(index.top - 1);
-        newIndex = tree.move(index.id, above.id, 'before');
+        while (diffY < 0) {
+          var i = index.top - 1;
+          var above = tree.getNodeByTop(i);
+          newIndex = tree.move(index.id, above.id, 'before');
+          index = newIndex;
+          if (!index) break;
+          diffY = dragging.y - dragging.h / 2 - (newIndex.top - 2) * dragging.h;
+        }
       } else if (diffY > dragging.h) {
         // down
-        if (index.next) {
-          var below = tree.getIndex(index.next);
-          if (below.children && below.children.length && !below.node.collapsed) {
-            newIndex = tree.move(index.id, index.next, 'prepend');
-          } else {
-            newIndex = tree.move(index.id, index.next, 'after');
-          }
-        } else {
-          var below = tree.getNodeByTop(index.top + index.height);
-          if (below && below.parent !== index.id) {
-            if (below.children && below.children.length) {
-              newIndex = tree.move(index.id, below.id, 'prepend');
+
+        while (diffY > dragging.h) {
+          if (!index) break;
+          if (index.next) {
+            var below = tree.getIndex(index.next);
+            if (below.children && below.children.length && !below.node.collapsed) {
+              newIndex = tree.move(index.id, index.next, 'prepend');
             } else {
-              newIndex = tree.move(index.id, below.id, 'after');
+              newIndex = tree.move(index.id, index.next, 'after');
+            }
+          } else {
+            var below = tree.getNodeByTop(index.top + index.height);
+            if (below && below.parent !== index.id) {
+              if (below.children && below.children.length) {
+                newIndex = tree.move(index.id, below.id, 'prepend');
+              } else {
+                newIndex = tree.move(index.id, below.id, 'after');
+              }
             }
           }
+
+          var prevDiffY = diffY;
+          diffY = dragging.y - dragging.h / 2 - (index.top - 1) * dragging.h;
+          if (diffY == prevDiffY) break;
+          index = newIndex;
         }
       }
 
