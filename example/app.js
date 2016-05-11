@@ -16,8 +16,7 @@ var App = React.createClass({
     };
   },
 
-  renderNode(node) {
-    if (node.dragging) console.log(node);
+  renderNode(node, dragging) {
     return (
       <span 
         className={cx('node', {
@@ -27,10 +26,9 @@ var App = React.createClass({
         draggable={false}
 
       >
-        <a href="/">{node.module}</a>
-        <button style={{"float":"right"}}>
-          button
-        </button>
+        {!dragging ? <a href="/">{node.module}</a> : <span>{node.module}</span>}
+        {!dragging ? <button style={{"float":"right"}}> button </button> : null}
+        
       </span>
     );
   },

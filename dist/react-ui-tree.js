@@ -91,7 +91,8 @@ var FullTree = function (_React$Component) {
           _react2.default.createElement(_node2.default, {
             tree: tree,
             index: draggingIndex,
-            paddingLeft: this.props.paddingLeft
+            paddingLeft: this.props.paddingLeft,
+            dragging: true
           })
         );
       }

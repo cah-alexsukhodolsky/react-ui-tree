@@ -105,7 +105,7 @@ var Node = function (_React$Component) {
           'div',
           { className: 'inner', ref: 'inner', onMouseDown: this.handleMouseDown },
           this.renderCollapse(),
-          tree.renderNode(node)
+          tree.renderNode(node, dragging)
         ),
         this.renderChildren()
       );
