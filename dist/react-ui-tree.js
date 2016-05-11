@@ -114,8 +114,9 @@ var FullTree = function (_React$Component) {
           index: tree.getIndex(1),
           key: 1,
           paddingLeft: this.props.paddingLeft,
-          onDragStart: this.dragStart,
-          onCollapse: this.toggleCollapse,
+          onDragStart: this.dragStart
+          // onDragEnd = {this.dragEnd}
+          , onCollapse: this.toggleCollapse,
           dragging: dragging && dragging.id
         })
       );
@@ -254,13 +255,18 @@ var FullTree = function (_React$Component) {
   }, {
     key: 'dragEnd',
     value: function dragEnd() {
+      console.log(this.state.dragging);
       var tree = this.state.tree;
       var index = tree.getIndex(this.state.dragging.id);
-      var node = index.node;
+      if (index) {
 
-      var parent = index.parent ? tree.getIndex(index.parent).node : null;
-      var prev = index.prev ? tree.getIndex(index.prev).node : null;
-      var next = index.next ? tree.getIndex(index.next).node : null;
+        var node = index.node;
+
+        var parent = index.parent ? tree.getIndex(index.parent).node : null;
+        var prev = index.prev ? tree.getIndex(index.prev).node : null;
+        var next = index.next ? tree.getIndex(index.next).node : null;
+        this.change(this.state.tree, node, parent, prev, next);
+      }
 
       this.setState({
         dragging: {
@@ -273,7 +279,6 @@ var FullTree = function (_React$Component) {
         currentlyDragging: false
       });
 
-      this.change(this.state.tree, node, parent, prev, next);
       window.removeEventListener('mousemove', this.drag);
       window.removeEventListener('mouseup', this.dragEnd);
     }
