@@ -25,7 +25,7 @@ var App = React.createClass({
         })} 
         onClick={this.onClickNode.bind(null, node)}
         draggable={false}
-        
+
       >
         <a href="/">{node.module}</a>
         <button style={{"float":"right"}}>
@@ -50,7 +50,7 @@ var App = React.createClass({
             tree={this.state.tree}
             onChange={this.handleChange}
             isNodeCollapsed={this.isNodeCollapsed}
-            onCollapse={this.handleCollapse}
+            onToggleCollapse={this.handleCollapse}
             renderNode={this.renderNode}
           />
         </div>

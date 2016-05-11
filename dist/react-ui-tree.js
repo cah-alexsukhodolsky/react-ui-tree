@@ -288,9 +288,7 @@ var FullTree = function (_React$Component) {
       if (this.props.onChange && this._newIndex) {
         this.props.onChange(tree.obj, node, parent, prev, next);
       }
-      if (this.props.onToggleCollapse) {
-        this.props.onToggleCollapse(tree.obj, node);
-      }
+
       this._newIndex = false;
       this._updated = true;
     }
@@ -308,6 +306,9 @@ var FullTree = function (_React$Component) {
       });
 
       this.change(tree, index.node);
+      if (this.props.onToggleCollapse) {
+        this.props.onToggleCollapse(tree.obj, index.node);
+      }
     }
   }]);
 
