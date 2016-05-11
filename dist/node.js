@@ -115,7 +115,10 @@ var Node = function (_React$Component) {
     value: function handleCollapse(e) {
       e.stopPropagation();
       var nodeId = this.props.index.id;
-      if (this.props.onCollapse) this.props.onCollapse(nodeId);
+      var node = this.props.index.node;
+      if (this.props.onCollapse) {
+        this.props.onCollapse(nodeId, node);
+      }
     }
   }, {
     key: 'handleMouseDown',

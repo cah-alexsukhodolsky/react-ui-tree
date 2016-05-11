@@ -17,11 +17,20 @@ var App = React.createClass({
   },
 
   renderNode(node) {
+    if (node.dragging) console.log(node);
     return (
-      <span className={cx('node', {
+      <span 
+        className={cx('node', {
         'is-active': node === this.state.active
-        })} onClick={this.onClickNode.bind(null, node)}>
-        {node.module}
+        })} 
+        onClick={this.onClickNode.bind(null, node)}
+        draggable={false}
+        
+      >
+        <a href="/">{node.module}</a>
+        <button style={{"float":"right"}}>
+          button
+        </button>
       </span>
     );
   },
@@ -41,6 +50,7 @@ var App = React.createClass({
             tree={this.state.tree}
             onChange={this.handleChange}
             isNodeCollapsed={this.isNodeCollapsed}
+            onCollapse={this.handleCollapse}
             renderNode={this.renderNode}
           />
         </div>
@@ -54,10 +64,17 @@ var App = React.createClass({
     );
   },
 
-  handleChange(tree) {
+  handleChange(tree, node, parent, prev, next) {
+    console.log("tree changed");
+    console.log(tree, node, parent, prev, next)
     this.setState({
       tree: tree
     });
+  },
+
+  handleCollapse(nodeId, node) {
+    console.log("collapsed!")
+    console.log(nodeId, node)
   },
 
   updateTree() {
