@@ -34,8 +34,6 @@ var FullTree = function (_React$Component) {
 
     _this.state = _this.init(props);
 
-    console.log("props on init: ", _this.props);
-
     _this.toggleCollapse = _this.toggleCollapse.bind(_this);
     _this.dragStart = _this.dragStart.bind(_this);
 
