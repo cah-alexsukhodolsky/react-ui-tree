@@ -43,8 +43,12 @@ var App = React.createClass({
     return (
       <div className="app">
         <div className="tree">
+          <div className="spacer">
+            <input type="text" placeholder="🔍 search" />
+          </div>
           <Tree
             paddingLeft={20}
+            startIndentationAt={1}
             tree={this.state.tree}
             onChange={this.handleChange}
             isNodeCollapsed={this.isNodeCollapsed}

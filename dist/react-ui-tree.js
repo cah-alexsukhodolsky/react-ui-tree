@@ -34,6 +34,8 @@ var FullTree = function (_React$Component) {
 
     _this.state = _this.init(props);
 
+    console.log("props on init: ", _this.props);
+
     _this.toggleCollapse = _this.toggleCollapse.bind(_this);
     _this.dragStart = _this.dragStart.bind(_this);
 
@@ -90,6 +92,7 @@ var FullTree = function (_React$Component) {
           { className: 'm-draggable', style: draggingStyles },
           _react2.default.createElement(_node2.default, {
             tree: tree,
+            startIndentationAt: this.props.startIndentationAt,
             index: draggingIndex,
             paddingLeft: this.props.paddingLeft,
             dragging: true
@@ -105,7 +108,6 @@ var FullTree = function (_React$Component) {
       var tree = this.state.tree;
       var dragging = this.state.dragging;
       var draggingDom = this.getDraggingDom();
-
       return _react2.default.createElement(
         'div',
         { className: 'm-tree ' + (this.state.currentlyDragging ? "currently-dragging" : "") },
@@ -115,6 +117,7 @@ var FullTree = function (_React$Component) {
           index: tree.getIndex(1),
           key: 1,
           paddingLeft: this.props.paddingLeft,
+          startIndentationAt: this.props.startIndentationAt,
           onDragStart: this.dragStart
           // onDragEnd = {this.dragEnd}
           , onCollapse: this.toggleCollapse,
@@ -146,7 +149,7 @@ var FullTree = function (_React$Component) {
   }, {
     key: 'drag',
     value: function drag(e) {
-
+      if (!this.dragging) return;
       if (this._start) {
         this.setState({
           dragging: this.dragging,
@@ -161,7 +164,7 @@ var FullTree = function (_React$Component) {
       var paddingLeft = this.props.paddingLeft;
       var newIndex = null;
       var index = tree.getIndex(dragging.id);
-
+      if (!index) return;
       var collapsed = index.node.collapsed;
 
       var _startX = this._startX;
@@ -203,13 +206,18 @@ var FullTree = function (_React$Component) {
 
       if (diffY < 0) {
         // up
+
         while (diffY < 0) {
           var i = index.top - 1;
           var above = tree.getNodeByTop(i);
-          newIndex = tree.move(index.id, above.id, 'before');
+          if (above) {
+            newIndex = tree.move(index.id, above.id, 'before');
+            if (newIndex) {
+              index = newIndex;
+              diffY = dragging.y - dragging.h / 2 - (newIndex.top - 2) * dragging.h;
+            }
+          }
           if (!newIndex) break;
-          index = newIndex;
-          diffY = dragging.y - dragging.h / 2 - (newIndex.top - 2) * dragging.h;
         }
       } else if (diffY > dragging.h) {
         // down
@@ -256,7 +264,7 @@ var FullTree = function (_React$Component) {
   }, {
     key: 'dragEnd',
     value: function dragEnd() {
-      console.log(this.state.dragging);
+
       var tree = this.state.tree;
       var index = tree.getIndex(this.state.dragging.id);
       if (index) {
@@ -319,11 +327,13 @@ var FullTree = function (_React$Component) {
 FullTree.propTypes = {
   tree: _react2.default.PropTypes.object.isRequired,
   paddingLeft: _react2.default.PropTypes.number,
+  startIndentationAt: _react2.default.PropTypes.number,
   renderNode: _react2.default.PropTypes.func.isRequired
 };
 
 FullTree.defaultProps = {
-  paddingLeft: 20
+  paddingLeft: 20,
+  startIndentationAt: 0
 };
 
 /* 

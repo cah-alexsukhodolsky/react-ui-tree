@@ -61,11 +61,11 @@ var Node = function (_React$Component) {
       var index = this.props.index;
       var tree = this.props.tree;
       var dragging = this.props.dragging;
-
       if (index.children && index.children.length) {
         var childrenStyles = {};
         if (index.node.collapsed) childrenStyles.display = 'none';
-        childrenStyles['paddingLeft'] = this.props.paddingLeft + 'px';
+        console.log("startIndentationAt for node", this.props.startIndentationAt);
+        childrenStyles['paddingLeft'] = this.props.index.left > this.props.startIndentationAt ? this.props.paddingLeft + 'px' : "0";
 
         return _react2.default.createElement(
           'div',
@@ -78,6 +78,7 @@ var Node = function (_React$Component) {
               key: childIndex.id,
               dragging: dragging,
               paddingLeft: _this2.props.paddingLeft,
+              startIndentationAt: _this2.props.startIndentationAt,
               onCollapse: _this2.props.onCollapse,
               onDragStart: _this2.props.onDragStart
             });
