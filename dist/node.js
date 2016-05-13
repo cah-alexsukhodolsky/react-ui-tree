@@ -79,6 +79,7 @@ var Node = function (_React$Component) {
               dragging: dragging,
               paddingLeft: _this2.props.paddingLeft,
               startIndentationAt: _this2.props.startIndentationAt,
+              canDropInPosition: _this2.props.canDropInPosition,
               onCollapse: _this2.props.onCollapse,
               onDragStart: _this2.props.onDragStart
             });
@@ -100,7 +101,8 @@ var Node = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { className: (0, _classnames2.default)('m-node', {
-            'placeholder': index.id === dragging
+            'placeholder': index.id === dragging,
+            'drop-not-allowed': index.id === dragging && this.props.canDropInPosition !== true
           }), style: styles },
         _react2.default.createElement(
           'div',

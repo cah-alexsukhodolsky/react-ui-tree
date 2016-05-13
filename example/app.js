@@ -16,6 +16,16 @@ var App = React.createClass({
     };
   },
 
+  canDropItem(node, parentNode) {
+    if (!parentNode) return false
+    if (parentNode.type == "folder" && node.type == "dashboard") return true
+    if (parentNode.type == "folder" && node.type == "folder") return true
+    if (parentNode.type == "dashboard" && node.type == "report") return true
+    if (parentNode.type == "root" && node.type == "folder") return true
+    if (parentNode.type == "root" && node.type == "dashboard") return true
+    return false
+  },
+
   renderNode(node, dragging) {
     return (
       <span 
@@ -27,6 +37,7 @@ var App = React.createClass({
 
       >
         {!dragging ? <a href="/">{node.module}</a> : <span>{node.module}</span>}
+        <small>{node.type}</small>
         {!dragging ? <button style={{"float":"right"}}> button </button> : null}
         
       </span>
@@ -54,6 +65,7 @@ var App = React.createClass({
             isNodeCollapsed={this.isNodeCollapsed}
             onToggleCollapse={this.handleCollapse}
             renderNode={this.renderNode}
+            canDropInPosition={this.canDropItem}
           />
         </div>
         <div className="inspector">

@@ -42,7 +42,7 @@ var FullTree = function (_React$Component) {
     _this.drag = _this.drag.bind(_this);
 
     _this.dragEnd = _this.dragEnd.bind(_this);
-
+    _this.canDropInPosition = _this.canDropInPosition.bind(_this);
     return _this;
   }
 
@@ -54,6 +54,7 @@ var FullTree = function (_React$Component) {
   }, {
     key: 'init',
     value: function init(props) {
+
       var tree = new Tree(props.tree);
       tree.isNodeCollapsed = props.isNodeCollapsed;
       tree.renderNode = props.renderNode;
@@ -71,9 +72,31 @@ var FullTree = function (_React$Component) {
         }
       };
     }
+
+    //////////////
+    //
+    //  Drag & Drop permissions.
+    //
+    //  If a callback is supplied then use that to evaluate whether or not the node can be attached to the current parent.
+    //  If none is supplied, anything is allowed
+    //
+
+  }, {
+    key: 'canDropInPosition',
+    value: function canDropInPosition(node, parentNode) {
+      if (!this.props.canDropInPosition) return true;
+      return this.props.canDropInPosition(node, parentNode);
+    }
+
+    //////////////
+    //
+    // DOM for the hovering copy of the node being dragged
+    //
+
   }, {
     key: 'getDraggingDom',
     value: function getDraggingDom() {
+
       var tree = this.state.tree;
       var dragging = this.state.dragging;
 
@@ -94,12 +117,20 @@ var FullTree = function (_React$Component) {
             index: draggingIndex,
             paddingLeft: this.props.paddingLeft,
             dragging: true
+
           })
         );
       }
 
       return null;
     }
+
+    /////////////
+    //
+    // Render everything
+    //
+    //
+
   }, {
     key: 'render',
     value: function render() {
@@ -118,7 +149,8 @@ var FullTree = function (_React$Component) {
           startIndentationAt: this.props.startIndentationAt,
           onDragStart: this.dragStart
           // onDragEnd = {this.dragEnd}
-          , onCollapse: this.toggleCollapse,
+          , canDropInPosition: this.state.canDropInPosition,
+          onCollapse: this.toggleCollapse,
           dragging: dragging && dragging.id
         })
       );
@@ -126,7 +158,14 @@ var FullTree = function (_React$Component) {
   }, {
     key: 'dragStart',
     value: function dragStart(id, dom, e) {
+      // set a state object with the current nodex index,
+      // so that if we perform an illegal move, we can rever.
+      //
+      this.setState({
+        indexBeforeDrag: this.state.tree.getIndex(id)
+      });
 
+      // wat are we dragging
       this.dragging = {
         id: id,
         w: dom.offsetWidth,
@@ -135,19 +174,25 @@ var FullTree = function (_React$Component) {
         y: dom.offsetTop
       };
 
+      // where are we dragging it
       this._startX = dom.offsetLeft;
       this._startY = dom.offsetTop;
       this._offsetX = e.clientX;
       this._offsetY = e.clientY;
       this._start = true;
 
+      // listen for mouse events
+      // TODO: disable native HTML drag/drop, which sometimes intercepts these mouse events and causes weird behaviour.
       window.addEventListener('mousemove', this.drag);
       window.addEventListener('mouseup', this.dragEnd);
     }
   }, {
     key: 'drag',
     value: function drag(e) {
+      // if we aren't dragging anything, abort abort!
       if (!this.dragging) return;
+
+      // what if we're starting
       if (this._start) {
         this.setState({
           dragging: this.dragging,
@@ -255,8 +300,10 @@ var FullTree = function (_React$Component) {
       if (!this._newIndex) this._newIndex = newIndex ? true : false;
 
       this.setState({
+        currentDragIndex: index,
         tree: tree,
-        dragging: dragging
+        dragging: dragging,
+        canDropInPosition: this.canDropInPosition(index.node, index.parent ? tree.getIndex(index.parent).node : null)
       });
     }
   }, {
@@ -265,15 +312,6 @@ var FullTree = function (_React$Component) {
 
       var tree = this.state.tree;
       var index = tree.getIndex(this.state.dragging.id);
-      if (index) {
-
-        var node = index.node;
-
-        var parent = index.parent ? tree.getIndex(index.parent).node : null;
-        var prev = index.prev ? tree.getIndex(index.prev).node : null;
-        var next = index.next ? tree.getIndex(index.next).node : null;
-        this.change(this.state.tree, node, parent, prev, next);
-      }
 
       this.setState({
         dragging: {
@@ -288,10 +326,46 @@ var FullTree = function (_React$Component) {
 
       window.removeEventListener('mousemove', this.drag);
       window.removeEventListener('mouseup', this.dragEnd);
+
+      if (index) {
+
+        var node = index.node;
+
+        var parent = index.parent ? tree.getIndex(index.parent).node : null;
+        var prev = index.prev ? tree.getIndex(index.prev).node : null;
+        var next = index.next ? tree.getIndex(index.next).node : null;
+
+        // are we allowed to perform this drag/drop
+        //
+        if (this.canDropInPosition(node, parent)) {
+          this.change(this.state.tree, node, parent, prev, next);
+        } else {
+          var indexBeforeDrag = this.state.indexBeforeDrag;
+          // if nothing moved, we're done!
+          if (indexBeforeDrag == index) return;
+
+          // if the old Index had a previous node, use that to inset
+          if (indexBeforeDrag.prev) {
+            tree.move(index.id, indexBeforeDrag.prev, 'after');
+
+            // or if it has a next, use that
+          } else if (indexBeforeDrag.next) {
+              tree.move(index.id, indexBeforeDrag.next, 'before');
+
+              // or it must be the sole child of it's parent, so use the parent
+            } else {
+                tree.move(index.id, indexBeforeDrag.parent, 'append');
+              }
+          this.setState({
+            needsUpdate: Math.random()
+          });
+        }
+      }
     }
   }, {
     key: 'change',
     value: function change(tree, node, parent, prev, next) {
+
       if (this.props.onChange && this._newIndex) {
         this.props.onChange(tree.obj, node, parent, prev, next);
       }
