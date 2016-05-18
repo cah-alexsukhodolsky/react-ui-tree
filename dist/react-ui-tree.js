@@ -158,6 +158,8 @@ var FullTree = function (_React$Component) {
   }, {
     key: 'dragStart',
     value: function dragStart(id, dom, e) {
+      // if the tree is locked, return — no dragging for you
+      if (this.props.locked === true) return;
       // set a state object with the current nodex index,
       // so that if we perform an illegal move, we can rever.
       //
