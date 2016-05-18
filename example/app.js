@@ -62,7 +62,7 @@ var App = React.createClass({
             startIndentationAt={1}
             tree={this.state.tree}
             onChange={this.handleChange}
-            locked = {true}
+            
             isNodeCollapsed={this.isNodeCollapsed}
             onToggleCollapse={this.handleCollapse}
             renderNode={this.renderNode}

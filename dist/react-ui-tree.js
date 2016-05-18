@@ -332,7 +332,8 @@ var FullTree = function (_React$Component) {
       if (index) {
 
         var node = index.node;
-
+        var indexBeforeDrag = this.state.indexBeforeDrag;
+        var oldParent = indexBeforeDrag.parent ? tree.getIndex(indexBeforeDrag.parent).node : null;
         var parent = index.parent ? tree.getIndex(index.parent).node : null;
         var prev = index.prev ? tree.getIndex(index.prev).node : null;
         var next = index.next ? tree.getIndex(index.next).node : null;
@@ -340,9 +341,12 @@ var FullTree = function (_React$Component) {
         // are we allowed to perform this drag/drop
         //
         if (this.canDropInPosition(node, parent)) {
-          this.change(this.state.tree, node, parent, prev, next);
+
+          // node, oldContainer, newContainer, index;
+          var i = parent.children.indexOf(node);
+          this.change(this.state.tree, node, oldParent, parent, i);
         } else {
-          var indexBeforeDrag = this.state.indexBeforeDrag;
+
           // if nothing moved, we're done!
           if (indexBeforeDrag == index) return;
 
@@ -366,10 +370,10 @@ var FullTree = function (_React$Component) {
     }
   }, {
     key: 'change',
-    value: function change(tree, node, parent, prev, next) {
+    value: function change(tree, node, oldParent, parent, index) {
 
       if (this.props.onChange && this._newIndex) {
-        this.props.onChange(tree.obj, node, parent, prev, next);
+        this.props.onChange(tree.obj, node, oldParent, parent, index);
       }
 
       this._newIndex = false;
