@@ -103,7 +103,7 @@ var Node = function (_React$Component) {
         { className: (0, _classnames2.default)('m-node', {
             'placeholder': index.id === dragging,
             'drop-not-allowed': index.id === dragging && this.props.canDropInPosition !== true
-          }), style: styles },
+          }), style: styles, draggable: false },
         _react2.default.createElement(
           'div',
           { className: 'inner', ref: 'inner', onMouseDown: this.handleMouseDown },

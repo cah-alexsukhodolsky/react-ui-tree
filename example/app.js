@@ -50,19 +50,30 @@ var App = React.createClass({
     });
   },
 
+  updateSearchTerm (e) {
+    this.setState({
+      searchTerm: e.target.value
+    });
+  },
+
   render() {
     return (
       <div className="app">
         <div className="tree">
           <div className="spacer">
-            <input type="text" placeholder="🔍 search" />
+            <input 
+              type="text" 
+              placeholder="🔍 search" 
+              onKeyUp={this.updateSearchTerm}
+            />
           </div>
           <Tree
             paddingLeft={20}
             startIndentationAt={1}
             tree={this.state.tree}
             onChange={this.handleChange}
-            
+            searchTerm={this.state.searchTerm}
+            searchKey= {"module"}
             isNodeCollapsed={this.isNodeCollapsed}
             onToggleCollapse={this.handleCollapse}
             renderNode={this.renderNode}

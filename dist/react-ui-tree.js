@@ -55,7 +55,16 @@ var FullTree = function (_React$Component) {
     key: 'init',
     value: function init(props) {
 
-      var tree = new Tree(props.tree);
+      var treeObj = Object.assign({}, props.tree);
+
+      if (props.searchTerm && props.searchKey) {
+        treeObj = this.recursiveFilter(treeObj, props.searchTerm, props.searchKey);
+      }
+
+      var tree = new Tree(treeObj);
+
+      // console.log(tree);
+
       tree.isNodeCollapsed = props.isNodeCollapsed;
       tree.renderNode = props.renderNode;
       tree.changeNodeCollapsed = props.changeNodeCollapsed;
@@ -71,6 +80,52 @@ var FullTree = function (_React$Component) {
           h: null
         }
       };
+    }
+  }, {
+    key: 'recursiveFilter',
+    value: function recursiveFilter(obj, searchTerm, searchKey) {
+      function filterChildren(node) {
+        var newNode = Object.assign({}, node);
+        var expanded = false;
+        if (!newNode[searchKey]) return false;
+        if (newNode.children) {
+
+          newNode.children = newNode.children.map(function (child) {
+            return filterChildren(child);
+          }).filter(function (child) {
+            return child != false;
+          });
+        }
+
+        if (newNode.children && newNode.children.length > 0) {
+          // console.log('new node has children', newNode)
+          expanded = true;
+        }
+        if (!newNode[searchKey] || newNode[searchKey].toLowerCase().indexOf(searchTerm.toLowerCase()) != -1) {
+          // console.log("search term matched: ", newNode[searchKey])
+          expanded = true;
+        }
+
+        // if (newNode.module == "app.js") {
+        //   console.log("app,js");
+        //   console.log(expanded)
+        //   console.log(newNode);
+        // }
+
+        if (expanded == true) {
+          newNode.collapsed = false;
+          // console.log('newNode allowed', newNode[searchKey]);
+          return newNode;
+        } else {
+          return false;
+        }
+      }
+
+      if (!obj.children) return obj;
+      if (!searchTerm || searchTerm == "") return obj;
+      if (!searchKey || searchKey == "") return obj;
+      obj = filterChildren(obj);
+      return obj;
     }
 
     //////////////
