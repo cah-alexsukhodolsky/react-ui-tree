@@ -77,6 +77,7 @@ var Node = function (_React$Component) {
               index: childIndex,
               key: childIndex.id,
               dragging: dragging,
+              dragParent: _this2.props.dragParent,
               paddingLeft: _this2.props.paddingLeft,
               startIndentationAt: _this2.props.startIndentationAt,
               canDropInPosition: _this2.props.canDropInPosition,
@@ -98,11 +99,14 @@ var Node = function (_React$Component) {
       var node = index.node;
       var styles = {};
 
+      if (this.props.dragParent == index.id) console.log(this.props);
+
       return _react2.default.createElement(
         'div',
         { className: (0, _classnames2.default)('m-node', {
             'placeholder': index.id === dragging,
-            'drop-not-allowed': index.id === dragging && this.props.canDropInPosition !== true
+            'drop-not-allowed': index.id === dragging && this.props.canDropInPosition !== true,
+            'current-drag-parent': this.props.dragParent == index.id && this.props.canDropInPosition
           }), style: styles, draggable: false },
         _react2.default.createElement(
           'div',

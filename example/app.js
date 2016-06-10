@@ -69,7 +69,7 @@ var App = React.createClass({
           </div>
           <Tree
             paddingLeft={20}
-            startIndentationAt={1}
+            startIndentationAt={Infinity}
             tree={this.state.tree}
             onChange={this.handleChange}
             searchTerm={this.state.searchTerm}

@@ -162,8 +162,8 @@ var FullTree = function (_React$Component) {
             startIndentationAt: this.props.startIndentationAt,
             index: draggingIndex,
             paddingLeft: this.props.paddingLeft,
-            dragging: true
-
+            dragging: true,
+            dragParent: dragging && dragging.parent
           })
         );
       }
@@ -206,7 +206,8 @@ var FullTree = function (_React$Component) {
             // onDragEnd = {this.dragEnd}
             , canDropInPosition: this.state.canDropInPosition,
             onCollapse: this.toggleCollapse,
-            dragging: dragging && dragging.id
+            dragging: dragging && dragging.id,
+            dragParent: dragging && dragging.parent
           })
         );
       }
@@ -229,7 +230,8 @@ var FullTree = function (_React$Component) {
         w: dom.offsetWidth,
         h: dom.offsetHeight,
         x: dom.offsetLeft,
-        y: dom.offsetTop
+        y: dom.offsetTop,
+        parent: null
       };
 
       // where are we dragging it
@@ -287,6 +289,7 @@ var FullTree = function (_React$Component) {
       if (diffX < 0) {
         // left
         if (index.parent && !index.next) {
+
           newIndex = tree.move(index.id, index.parent, 'after');
         }
       } else if (diffX > paddingLeft) {
@@ -294,6 +297,7 @@ var FullTree = function (_React$Component) {
         if (index.prev) {
           var prevNode = tree.getIndex(index.prev).node;
           if (!prevNode.collapsed && !prevNode.leaf) {
+
             newIndex = tree.move(index.id, index.prev, 'append');
           }
         }
@@ -353,9 +357,12 @@ var FullTree = function (_React$Component) {
       if (newIndex) {
         newIndex.node.collapsed = collapsed;
         dragging.id = newIndex.id;
+        dragging.parent = newIndex.parent;
       }
 
       if (!this._newIndex) this._newIndex = newIndex ? true : false;
+
+      // console.log(index);
 
       this.setState({
         currentDragIndex: index,
