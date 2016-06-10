@@ -98,23 +98,14 @@ var FullTree = function (_React$Component) {
         }
 
         if (newNode.children && newNode.children.length > 0) {
-          // console.log('new node has children', newNode)
           expanded = true;
         }
         if (!newNode[searchKey] || newNode[searchKey].toLowerCase().indexOf(searchTerm.toLowerCase()) != -1) {
-          // console.log("search term matched: ", newNode[searchKey])
           expanded = true;
         }
 
-        // if (newNode.module == "app.js") {
-        //   console.log("app,js");
-        //   console.log(expanded)
-        //   console.log(newNode);
-        // }
-
         if (expanded == true) {
           newNode.collapsed = false;
-          // console.log('newNode allowed', newNode[searchKey]);
           return newNode;
         } else {
           return false;
@@ -192,23 +183,33 @@ var FullTree = function (_React$Component) {
       var tree = this.state.tree;
       var dragging = this.state.dragging;
       var draggingDom = this.getDraggingDom();
-      return _react2.default.createElement(
-        'div',
-        { className: 'm-tree ' + (this.state.currentlyDragging ? "currently-dragging" : "") },
-        draggingDom,
-        _react2.default.createElement(_node2.default, {
-          tree: tree,
-          index: tree.getIndex(1),
-          key: 1,
-          paddingLeft: this.props.paddingLeft,
-          startIndentationAt: this.props.startIndentationAt,
-          onDragStart: this.dragStart
-          // onDragEnd = {this.dragEnd}
-          , canDropInPosition: this.state.canDropInPosition,
-          onCollapse: this.toggleCollapse,
-          dragging: dragging && dragging.id
-        })
-      );
+      if (tree.obj && tree.obj.children && tree.obj.children.length == 0 && this.props.searchTerm) {
+        return _react2.default.createElement(
+          'div',
+          { className: 'm-tree empty-search' },
+          ' no search results for ',
+          this.props.searchTerm
+        );
+      } else {
+
+        return _react2.default.createElement(
+          'div',
+          { className: 'm-tree ' + (this.state.currentlyDragging ? "currently-dragging" : "") },
+          draggingDom,
+          _react2.default.createElement(_node2.default, {
+            tree: tree,
+            index: tree.getIndex(1),
+            key: 1,
+            paddingLeft: this.props.paddingLeft,
+            startIndentationAt: this.props.startIndentationAt,
+            onDragStart: this.dragStart
+            // onDragEnd = {this.dragEnd}
+            , canDropInPosition: this.state.canDropInPosition,
+            onCollapse: this.toggleCollapse,
+            dragging: dragging && dragging.id
+          })
+        );
+      }
     }
   }, {
     key: 'dragStart',
